@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export PORT=5100
+export PORT=5101
 export MIX_ENV=prod
 export GIT_PATH=/home/task_tracker/src/task_tracker
 
@@ -22,6 +22,8 @@ mix deps.get
 (cd assets && ./node_modules/brunch/bin/brunch b -p)
 
 mix phx.digest
+mix ecto.create
+mix ecto.migrate
 mix release --env=prod
 
 mkdir -p ~/www
@@ -42,4 +44,3 @@ crontab - <<CRONTAB
 CRONTAB
 
 #. start.sh
-                                                   1,1           Top
