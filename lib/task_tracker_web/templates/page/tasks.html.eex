@@ -1,0 +1,30 @@
+<%= if @current_user do %>
+  <div class="row">
+    <div class="col">
+      <%= render TaskTrackerWeb.TaskView, "form.html",
+          Map.put(assigns, :action, task_path(@conn, :create)) %>
+    </div>
+  </div>
+<% end %>
+
+<h1>Your Tasks</h1>
+
+<%= Enum.map @tasks, fn task -> %>
+<div class="row">
+  <div class="col">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="card-title"><%= task.title %></h6>
+        <p><%= task.desc %></p>
+        <p>Belongs to :
+          <%= if task.user do %>
+            <%= task.user.name %>
+          <% else %>
+            No one
+          <% end %>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>

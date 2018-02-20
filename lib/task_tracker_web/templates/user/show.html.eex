@@ -1,13 +1,21 @@
-<h2>Show User</h2>
+<h2>User #<%= @user.id%></h2>
 
-<ul>
+<table class="table">
+  <tbody>
 
-  <li>
-    <strong>Name:</strong>
-    <%= @user.name %>
-  </li>
+    <tr>
+      <th scope="row">ID</th>
+      <td><%= @user.id %></td>
+    </tr>
 
-</ul>
+    <tr>
+      <th scope="row">Name</th>
+      <td><%= @user.name %></td>
+    </tr>
+
+  </tbody>
+
+</table>
 
 <span><%= link "Edit", to: user_path(@conn, :edit, @user) %></span>
 <span><%= link "Back", to: user_path(@conn, :index) %></span>

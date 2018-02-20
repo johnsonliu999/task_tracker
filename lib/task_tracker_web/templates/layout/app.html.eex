@@ -7,25 +7,37 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Hello TaskTracker!</title>
+    <title>Task Tracker</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
   </head>
 
   <body>
     <div class="container">
-      <header class="header">
-        <nav role="navigation">
-          <ul class="nav nav-pills pull-right">
-            <li><a href="http://www.phoenixframework.org/docs">Get Started</a></li>
-          </ul>
-        </nav>
-        <span class="logo"></span>
-      </header>
-
-      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+      <%= if get_flash(@conn, :info) do %>
+        <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+      <% end %>
+      <%= if get_flash(@conn, :error) do %>
+        <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+      <% end %>
 
       <main role="main">
+        <div class="row">
+          <div class="col-3 offset-9">
+            <%= if @current_user do %>
+            <p>
+              Logged in as: <%= @current_user.name %> |
+              <%= link "Log Out", to: "/session", method: :delete %>
+            </p>
+            <% else %>
+              <p>Not logged in |
+                <%= link "Log in", to: page_path(@conn, :index) %> |
+                <%= link "Register", to: user_path(@conn, :new) %>
+              </p>
+            <% end %>
+
+          </div>
+        </div>
+
         <%= render @view_module, @view_template, assigns %>
       </main>
 

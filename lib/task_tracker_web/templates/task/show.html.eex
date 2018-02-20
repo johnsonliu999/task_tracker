@@ -1,0 +1,52 @@
+<h2>Task #<%= @task.id %></h2>
+
+<table class="table">
+  <tbody>
+
+    <tr>
+      <th scope="row">ID</th>
+      <td><%= @task.id %></td>
+    </tr>
+
+    <tr>
+      <th scope="row">Title</th>
+      <td><%= @task.title %></td>
+    </tr>
+
+    <tr>
+      <th scope="row">Description</th>
+      <td><%= @task.desc %></td>
+    </tr>
+
+    <tr>
+      <th scope="row">Time Spent</th>
+      <td>
+        <%= if @task.time == 0 do %>
+          0 m
+        <% else %>
+          <%= if div(@task.time, 60) != 0 do %>
+            <%= div @task.time, 60 %> h
+          <% end %>
+          <%= if rem(@task.time, 60) != 0 do %>
+            <%= rem @task.time, 60 %> m
+          <% end %>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <th scope="row">Status</th>
+      <td>
+      <%= if @task.done do %>
+        <span class="badge badge-success"> &radic; </span>
+      <% else %>
+        <span class="badge badge-light"> &minus; </span>
+      <% end %>
+      </td>
+    </tr>
+  </tbody>
+
+</table>
+
+<span><%= link "Edit", to: task_path(@conn, :edit, @task), class: "btn btn-primary" %></span>
+<span><%= link "Back", to: task_path(@conn, :index), class: "btn btn-secondary" %></span>

@@ -6,6 +6,7 @@ defmodule TaskTracker.Accounts.User do
 
   schema "users" do
     field :name, :string, null: false
+    has_many :tasks, TaskTracker.Tasks.Task
 
     timestamps()
   end
@@ -15,5 +16,6 @@ defmodule TaskTracker.Accounts.User do
     user
     |> cast(attrs, [:name])
     |> validate_required([:name])
+    |> unique_constraint(:name)
   end
 end
