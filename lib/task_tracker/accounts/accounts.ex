@@ -54,6 +54,8 @@ defmodule TaskTracker.Accounts do
 
   """
   def create_user(attrs \\ %{}) do
+    name = attrs["name"] |> String.trim
+    attrs = attrs |> Map.put("name", name)
     %User{}
     |> User.changeset(attrs)
     |> Repo.insert()

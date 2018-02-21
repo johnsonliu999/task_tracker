@@ -13,6 +13,16 @@
 
   <body>
     <div class="container">
+      <nav class="navbar sticky-top navbar-expand-sm navbar-dark bg-primary">
+        <%= link "Task Tracker", to: page_path(@conn, :index), class: "navbar-brand" %>
+
+        <div class="navbar-nav">
+          <%= link "Tasks", to: task_path(@conn, :index), class: "nav-item nav-link"%>
+          <%= link "Users", to: user_path(@conn, :index), class: "nav-item nav-link" %>
+        </div>
+
+      </nav>
+
       <%= if get_flash(@conn, :info) do %>
         <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <% end %>
@@ -21,22 +31,15 @@
       <% end %>
 
       <main role="main">
-        <div class="row">
-          <div class="col-3 offset-9">
+        <p class="text-right">
             <%= if @current_user do %>
-            <p>
-              Logged in as: <%= @current_user.name %> |
-              <%= link "Log Out", to: "/session", method: :delete %>
-            </p>
-            <% else %>
-              <p>Not logged in |
-                <%= link "Log in", to: page_path(@conn, :index) %> |
-                <%= link "Register", to: user_path(@conn, :new) %>
-              </p>
-            <% end %>
 
-          </div>
-        </div>
+              HI, <strong><%= @current_user.name %></strong>
+              <%= link "Log Out", to: "/session", method: :delete %>
+            <% else %>
+                <%= link "Log in", to: page_path(@conn, :index) %>
+            <% end %>
+          </p>
 
         <%= render @view_module, @view_template, assigns %>
       </main>

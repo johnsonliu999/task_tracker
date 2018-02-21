@@ -35,6 +35,15 @@
     </tr>
 
     <tr>
+      <th scope="row">Assignee</th>
+      <td>
+        <%= if @task.user do %>
+          <%= @task.user.name %>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
       <th scope="row">Status</th>
       <td>
       <%= if @task.done do %>
@@ -48,5 +57,7 @@
 
 </table>
 
-<span><%= link "Edit", to: task_path(@conn, :edit, @task), class: "btn btn-primary" %></span>
+<%= if @current_user && @current_user.name == @task.user.name do %>
+  <span><%= link "Edit", to: task_path(@conn, :edit, @task), class: "btn btn-primary" %></span>
+<% end %>
 <span><%= link "Back", to: task_path(@conn, :index), class: "btn btn-secondary" %></span>
