@@ -1,6 +1,40 @@
-# TaskTracker
+# TaskTracker V2.0
 
-# Design Strategy
+### Latest Design Strategies
+
+- Task1: Manager
+
+  - Managers & users
+
+    First through the navigation bar enter the `Users` list, the username started with  `#` is a manager. Through the manager's profile, we can get his/her underlings.
+
+  - Assign Tasks
+
+    First log as a manager using the manger's name, then we can get a list of tasks of the manger him/herself and his/her underlings.
+
+    There is a `New Task` button below, which will bring us to a new task form, the manager can assign task through the `select` input, which contains only his/her underlings' names.
+
+    If log as a normal user, there won't be the `New Task` button, and server-side will forbid the access to the form as well.
+
+  - Profile
+
+    Any profile will show their managers and underlings. A normal user don't have underlings but a manager.
+
+  - Reports
+
+    If log as a manager, the navigation bar will show a entrance for reports, which shows a list of tasks assigned to his/her underlings and the status of the tasks.
+
+- Task2
+
+  - TimeBlock Resources
+
+    Created through `mix phx.gen.json`, and fieds `start` and `end`. User can see multiple pairs of them in a certain task detail page and can be edited and deleted by the users.
+
+  - Start & Stop Tasks
+
+    User can start and stop their tasks in the `Tasks` index page, which shows a list of tasks and the `Start` button. After clicking `Start` button, it will turn into a red `Stop` button. After clicking `Stop`, a new record of TimeBlock will be sent to the server which is implemented by jQuery's AJAX function.
+
+#### Last Design Strategy
 - User
 
   - Delete
@@ -41,24 +75,3 @@
   Since each button will load a new page and tracking time will modify the `time` field, I decide to redirect to the *task edit* page for tracking time by editing the `time` field.
 
   To limit the time input, I set the `step`, `min` of the number input, so there is no worry of invalid time input.
-
-# Start Server
-
-To start your Phoenix server:
-
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.create && mix ecto.migrate`
-  * Install Node.js dependencies with `cd assets && npm install`
-  * Start Phoenix endpoint with `mix phx.server`
-
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
-
-Ready to run in production? Please [check our deployment guides](http://www.phoenixframework.org/docs/deployment).
-
-## Learn more
-
-  * Official website: http://www.phoenixframework.org/
-  * Guides: http://phoenixframework.org/docs/overview
-  * Docs: https://hexdocs.pm/phoenix
-  * Mailing list: http://groups.google.com/group/phoenix-talk
-  * Source: https://github.com/phoenixframework/phoenix
