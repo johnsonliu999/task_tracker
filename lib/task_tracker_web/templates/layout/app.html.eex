@@ -17,8 +17,12 @@
         <%= link "Task Tracker", to: page_path(@conn, :index), class: "navbar-brand" %>
 
         <div class="navbar-nav">
-          <%= link "Tasks", to: task_path(@conn, :index), class: "nav-item nav-link"%>
+          <% t = if @current_user && @current_user.manager_part, do: "Reports", else: "Tasks" %>
+          <%= link t, to: task_path(@conn, :index), class: "nav-item nav-link"%>
           <%= link "Users", to: user_path(@conn, :index), class: "nav-item nav-link" %>
+          <%= if @current_user do %>
+            <%= link "Profile", to: user_path(@conn, :show, @current_user.id), class: "nav-item nav-link" %>
+          <% end %>
         </div>
 
       </nav>

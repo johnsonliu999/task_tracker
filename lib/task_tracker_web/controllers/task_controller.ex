@@ -3,17 +3,39 @@ defmodule TaskTrackerWeb.TaskController do
 
   alias TaskTracker.Tasks
   alias TaskTracker.Tasks.Task
+  alias TaskTracker.Repo
 
   require Logger
 
   def index(conn, _params) do
-    tasks = Tasks.list_tasks()
+    cur_user = conn.assigns[:current_user]
+    if cur_user do
+      cur_user = cur_user |> Repo.preload([:tasks])
+      tasks = cur_user.tasks
+      if cur_user.manager_part do
+          manager_part = cur_user.manager_part |> Repo.preload(:underlings)
+          underlings = manager_part.underlings |> Repo.preload(:tasks)
+          tasks = tasks ++ (underlings |> Enum.flat_map(&(&1.tasks)))
+      end
+      tasks = tasks |> Repo.preload(:user)
+    else
+      tasks = []
+    end
+    #tasks = Tasks.list_tasks()
     render(conn, "index.html", tasks: tasks)
   end
 
   def new(conn, _params) do
-    changeset = Tasks.change_task(%Task{})
-    render(conn, "new.html", changeset: changeset)
+    cur_user = conn.assigns[:current_user]
+    if cur_user && cur_user.manager_part do
+      changeset = Tasks.change_task(%Task{})
+      render(conn, "new.html", changeset: changeset)
+    else
+      conn
+      |> put_flash(:error, "Not a manager")
+      |> redirect(to: task_path(conn, :index))
+    end
+
   end
 
   def create(conn, %{"task" => task_params}) do
@@ -33,6 +55,7 @@ defmodule TaskTrackerWeb.TaskController do
 
   def show(conn, %{"id" => id}) do
     task = Tasks.get_task(id)
+            |> Repo.preload([:time_blocks, :user])
     render(conn, "show.html", task: task)
   end
 

@@ -1,5 +1,9 @@
 <h2>Task #<%= @task.id %></h2>
 
+<script>
+  window.tb_path = "<%= time_block_path(@conn, :index)%>";
+</script>
+
 <table class="table">
   <tbody>
 
@@ -16,22 +20,6 @@
     <tr>
       <th scope="row">Description</th>
       <td><%= @task.desc %></td>
-    </tr>
-
-    <tr>
-      <th scope="row">Time Spent</th>
-      <td>
-        <%= if @task.time == 0 do %>
-          0 m
-        <% else %>
-          <%= if div(@task.time, 60) != 0 do %>
-            <%= div @task.time, 60 %> h
-          <% end %>
-          <%= if rem(@task.time, 60) != 0 do %>
-            <%= rem @task.time, 60 %> m
-          <% end %>
-        <% end %>
-      </td>
     </tr>
 
     <tr>
@@ -54,10 +42,54 @@
       </td>
     </tr>
   </tbody>
-
 </table>
 
-<%= if @current_user && @current_user.name == @task.user.name do %>
+<%= if @current_user && (@current_user.manager_part || @current_user.id == @task.user_id) do %>
   <span><%= link "Edit", to: task_path(@conn, :edit, @task), class: "btn btn-primary" %></span>
 <% end %>
 <span><%= link "Back", to: task_path(@conn, :index), class: "btn btn-secondary" %></span>
+
+<hr>
+
+<h3>Time Blocks</h3>
+<table class="table">
+  <thead>
+    <th>From</th>
+    <th>To</th>
+    <th>Operations</th>
+  </thead>
+  <tbody>
+    <%= for tb <- @task.time_blocks do %>
+    <tr>
+      <td>
+        <input
+          id='<%= "tb-s-#{tb.id}" %>'
+          type="datetime-local"
+          value="<%= tb.start
+                      |> NaiveDateTime.truncate(:second)
+                      |> NaiveDateTime.to_iso8601 %>"
+          />
+      </td>
+      <td>
+        <input type="datetime-local"
+          id='<%= "tb-e-#{tb.id}" %>'
+          value="<%= tb.end
+                      |> NaiveDateTime.truncate(:second)
+                      |> NaiveDateTime.to_iso8601 %>"
+          />
+      </td>
+      <td>
+        <button class="update-btn btn btn btn-primary"
+                data-tb-id="<%= tb.id %>"
+                data-task-id="<%= @task.id %>">
+          Update
+        </button>
+        <button class="del-btn btn btn-danger"
+                data-tb-id="<%= tb.id %>">
+        Delete
+        </button>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

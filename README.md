@@ -11,6 +11,13 @@
 
     User name should be unique by add `unique` when migrate.
 
+- Manager
+
+  - User - Manager one-to-one relationship
+
+    keep a `user_id` as foreign_key, so that the user can be a manager if has_one `manager` field
+
+
 - Task
 
   - Assign

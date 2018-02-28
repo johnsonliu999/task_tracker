@@ -13,6 +13,22 @@
       <td><%= @user.name %></td>
     </tr>
 
+    <tr>
+      <th scope="row">Manager</th>
+      <td><%= @user.manager && @user.manager.user.name %></td>
+    </tr>
+
+    <tr>
+      <th scope="row">Underlings</th>
+      <td>
+        <%= if @user.manager_part do %>
+          <%= for u <- @user.manager_part.underlings do %>
+            <div><%= u.name %><div>
+          <% end %>
+        <% end %>
+      </td>
+    </tr>
+
   </tbody>
 
 </table>

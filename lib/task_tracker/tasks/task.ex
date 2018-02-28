@@ -6,10 +6,10 @@ defmodule TaskTracker.Tasks.Task do
 
   schema "tasks" do
     field :desc, :string
-    field :time, :integer
     field :title, :string
     field :done, :boolean
     belongs_to :user, TaskTracker.Accounts.User
+    has_many :time_blocks, TaskTracker.Tasks.TimeBlock
 
     timestamps()
   end
@@ -17,23 +17,15 @@ defmodule TaskTracker.Tasks.Task do
   @doc false
   def changeset(%Task{} = task, attrs) do
     task
-    |> cast(attrs, [:user_id, :title, :desc, :time, :done])
-    |> validate_required([:user_id, :title, :desc, :time, :done])
+    |> cast(attrs, [:user_id, :title, :desc, :done])
+    |> validate_required([:user_id, :title, :desc, :done])
     |> foreign_key_constraint(:user_id)
   end
 
   def changeset_update(%Task{} = task, attrs) do
     task
-    |> cast(attrs, [:user_id, :title, :desc, :time, :done])
-    |> validate_required([:user_id, :title, :desc, :time, :done])
-    |> validate_change(:time,
-        fn :time, time ->
-          if rem(time, 15) != 0 do
-            [time: "Only step 15 is allowed"]
-          else
-            []
-          end
-        end)
+    |> cast(attrs, [:user_id, :title, :desc, :done])
+    |> validate_required([:user_id, :title, :desc, :done])
     |> foreign_key_constraint(:user_id)
   end
 end

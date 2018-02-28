@@ -1,5 +1,6 @@
 defmodule TaskTrackerWeb.Router do
   use TaskTrackerWeb, :router
+  alias TaskTracker.Repo
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -15,6 +16,9 @@ defmodule TaskTrackerWeb.Router do
     # TODO: Move this function out of the router module.
     user_id = get_session(conn, :user_id)
     user = TaskTracker.Accounts.get_user(user_id || -1)
+    if user do
+      user = user |> Repo.preload(:manager_part)
+    end
     assign(conn, :current_user, user)
   end
 
@@ -34,10 +38,15 @@ defmodule TaskTrackerWeb.Router do
     resources "/users", UserController
     resources "/tasks", TaskController
     resources "/tests", TestController
+    resources "/managers", ManagerController
   end
 
   # Other scopes may use custom stacks.
   # scope "/api", TaskTrackerWeb do
   #   pipe_through :api
   # end
+  scope "/api/v1", TaskTrackerWeb do
+    pipe_through :api
+    resources "/time_blocks", TimeBlockController
+  end
 end

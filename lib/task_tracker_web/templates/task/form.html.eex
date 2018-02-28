@@ -5,9 +5,16 @@
     </div>
   <% end %>
 
-  <div class="form-group">
-    <%= label f, :user_name, "User Name", class: "control-label" %>
-    <%= text_input f, :user_name, class: "form-control" %>
+<% alias TaskTracker.Repo %>
+  <% if @current_user.manager_part do %>
+    <% manager_part = @current_user.manager_part |> Repo.preload(:underlings) %>
+    <% underling_names = manager_part.underlings |> Enum.map(&(&1.name)) %>
+  <% else %>
+    <% underling_names = [@current_user.name] %>
+  <% end %>
+  <div class="form-group" >
+    <%= label f, :user_name, "Assignee", class: "control-label" %>
+    <%= select f, :user_name, underling_names, class: "form-control" %>
     <%= error_tag f, :user_name %>
   </div>
 
@@ -24,13 +31,6 @@
   </div>
 
   <%= if @action != task_path(@conn, :create) do %>
-    <div class="form-group">
-      <%= label f, :time, "Time Spent", class: "control-label" %>
-      <%= number_input f, :time, class: "form-control",
-        step: 15, min: 0, placeholder: 0
-       %>
-      <%= error_tag f, :time %>
-    </div>
 
     <div class="form-group">
       <%= label f, :done, "Complete", class: "control-label" %>

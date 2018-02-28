@@ -3,9 +3,11 @@ defmodule TaskTrackerWeb.UserController do
 
   alias TaskTracker.Accounts
   alias TaskTracker.Accounts.User
+  alias TaskTracker.Repo
 
   def index(conn, _params) do
     users = Accounts.list_users()
+      |> Repo.preload([:manager_part, manager: :user])
     render(conn, "index.html", users: users)
   end
 
@@ -26,7 +28,13 @@ defmodule TaskTrackerWeb.UserController do
   end
 
   def show(conn, %{"id" => id}) do
-    user = Accounts.get_user!(id)
+    user = Accounts.get_user!(id) |> Repo.preload([:manager, :manager_part])
+    if user.manager do
+      user = user |> Repo.preload([manager: :user])
+    end
+    if user.manager_part do
+      user = user |> Repo.preload([manager_part: :underlings])
+    end
     render(conn, "show.html", user: user)
   end
 
