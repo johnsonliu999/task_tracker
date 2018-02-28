@@ -45,6 +45,7 @@ function start_click(ev) {
         contentType: "application/json; charset=UTF-8",
         data: data,
         success: resp => {
+          alert('insert time block succeed')
           $(btn).text("Start");
           $(btn).removeClass('btn-danger').addClass('btn-success');
           $(btn).data('start-time', '');
